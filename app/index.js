@@ -16,9 +16,10 @@ const dom = {
     btnRun : '.btn-run',
     screen : '.screen',
     sortType : '.sort-type',
-    selected : '.selected-insertion',
+    insertionSelected : '.selected-insertion',
     comparer : '.selected-comparer',
     warningMessage : '.warning-message',
+    bar: '.bar',
 };
 
 const sortController = (function() {
@@ -48,16 +49,15 @@ const sortController = (function() {
         }
 
         if(!isWorking && !notNumbers && minLength) {
-            document.querySelector('.warning-message').classList.remove('warning-active');
-
-            isWorking = true;
-            
             let term = 550;
+            isWorking = true;
+
+            document.querySelector(dom.warningMessage).classList.remove('warning-active');
         
             switch(sortType) {
                 case 'Bubble' :
                     displayBars(numbers);
-                    bubbleBubble.run(numbers);
+                    bubbleSort.run(numbers);
                     break;
                 case 'Insertion' :
                     displayBars(numbers);
@@ -145,36 +145,37 @@ const sortController = (function() {
         }
 
         if(type === 'minimum-length') {
-            messageEl.textContent = 'Please input more than 5 numbers.'
+            messageEl.textContent = 'Please input more than 5 numbers.';
             messageEl.classList.add('warning-active');
         }
     };
 })();
 
-const bubbleBubble = (function() {
+const bubbleSort = (function() {
     function animationSwap(idx1, idx2) {
         const distance = idx2 - idx1;
-        const bars = document.querySelectorAll('.bar');
+        const bars = document.querySelectorAll(dom.bar);
         
         bars[idx1].style.transform = `translate(${50 * distance}px)`;
         bars[idx2].style.transform = `translate(${50 * -distance}px)`;
     };
 
     function fixAnimation(idx1, idx2) {
-        const screen = document.querySelector('.screen');
-        const bars = document.querySelectorAll('.bar');
+        const screen = document.querySelector(dom.screen);
+        const bars = document.querySelectorAll(dom.bar);
         const minVal = bars[idx2];
         const numSentBack = bars[idx1];
+
         minVal.style.transform = 'translate(0px)';
         numSentBack.style.transform = 'translate(0px)';
     
         screen.insertBefore(minVal, numSentBack);
-        const revPosition = document.querySelectorAll('.bar');
+        const revPosition = document.querySelectorAll(dom.bar);
         screen.insertBefore(numSentBack, revPosition[idx2 + 1]);
     };
 
     function displaySelected(idx1, idx2) {
-        const barElements = document.querySelectorAll('.bar');
+        const barElements = document.querySelectorAll(dom.bar);
     
         for(let i = idx1; i <= idx2; i++) {
             barElements[i].classList.add('selected');
@@ -221,7 +222,7 @@ const bubbleBubble = (function() {
 
 const insertionSort = (function() {
     function displayInsertionSelected(idx) {
-        const barElements = document.querySelectorAll('.bar');
+        const barElements = document.querySelectorAll(dom.bar);
         barElements[idx].classList.add('selected-insertion');
     };
 
@@ -231,34 +232,34 @@ const insertionSort = (function() {
     };
 
     function displayCompareBar(idx) {
-        const barElements = document.querySelectorAll('.bar');
+        const barElements = document.querySelectorAll(dom.bar);
         barElements[idx].classList.add('selected-comparer');
     };
 
     function swapAnimation() {
         document.querySelector(dom.comparer).style.transition = 'all .6s';
         document.querySelector(dom.comparer).style.transform = 'translateX(50px)';
-        document.querySelector('.selected-insertion').style.transform = 'translate(-50px, 120%)';
+        document.querySelector(dom.insertionSelected).style.transform = 'translate(-50px, 120%)';
     };
 
     function fixAni() {
-        const selected = document.querySelector(dom.selected);
+        const selected = document.querySelector(dom.insertionSelected);
         const comparer = document.querySelector(dom.comparer);
         
         comparer.style.transition = 'no';
         comparer.style.transform = 'translateX(0px)';
         selected.style.transform = 'translate(0px, 120%)';
-        document.querySelector('.screen').insertBefore(selected, comparer);
+        document.querySelector(dom.screen).insertBefore(selected, comparer);
         clearSelected('selected-comparer');
     };
 
     function displayInsertion() {
-        document.querySelector('.selected-insertion').style.transition = 'all .6s';
-        document.querySelector('.selected-insertion').style.transform = 'translate(0px, 0px)';
-        document.querySelector('.selected-insertion').classList.add('completed-bar');
-        document.querySelector('.selected-comparer').classList.add('completed-bar');
-        document.querySelector('.selected-insertion').classList.remove('selected-insertion');
-        document.querySelector('.selected-comparer').classList.remove('selected-comparer');
+        document.querySelector(dom.insertionSelected).style.transition = 'all .6s';
+        document.querySelector(dom.insertionSelected).style.transform = 'translate(0px, 0px)';
+        document.querySelector(dom.insertionSelected).classList.add('completed-bar');
+        document.querySelector(dom.comparer).classList.add('completed-bar');
+        document.querySelector(dom.insertionSelected).classList.remove('selected-insertion');
+        document.querySelector(dom.comparer).classList.remove('selected-comparer');
     };
 
     return {
@@ -268,7 +269,7 @@ const insertionSort = (function() {
         
                 for(let j = i - 1; j >= 0; j--) {
                     aniQueue.push(function() {
-                        if(!document.querySelector('.selected-insertion')) {
+                        if(!document.querySelector(dom.insertionSelected)) {
                             displayInsertionSelected(i);
                         }
                     });
@@ -296,7 +297,7 @@ const insertionSort = (function() {
         
                 if(i === nums.length - 1) {
                     aniQueue.push(function() {
-                        const barElements = document.querySelectorAll('.bar');
+                        const barElements = document.querySelectorAll(dom.bar);
                         barElements[barElements.length - 1].classList.add('completed-bar');
                     });
                 }
@@ -330,7 +331,7 @@ const mergeSort = (function() {
                 x = x + move;
             }
 
-            curCellEl.style.left = x + 'px'
+            curCellEl.style.left = x + 'px';
             curCellEl.style.top = y - 70 + 'px';
         });
     };
@@ -354,7 +355,7 @@ const mergeSort = (function() {
             leftPosition = document.getElementById(leftNodes[0]).offsetLeft + (gap / 2);
         };
 
-        aniQueue.push(calculatePosition.bind(null, leftArr[leftArr.length - 1], rightArr[0], leftArr.slice()))
+        aniQueue.push(calculatePosition.bind(null, leftArr[leftArr.length - 1], rightArr[0], leftArr.slice()));
     
         while(leftArr.length !== 0 || rightArr.length !== 0) {
             let restNumbers;
@@ -400,12 +401,14 @@ const mergeSort = (function() {
     function calculateGap(lastNumOfLeft, firstNumOfRight) {
         const endOfLeft = document.getElementById(lastNumOfLeft).offsetLeft + 30;
         const beginOfRight = document.getElementById(firstNumOfRight).offsetLeft;
+        
         return beginOfRight - endOfLeft;
     };
 
     function displayMerging(val, location) {
         const mergingEl = document.getElementById(val);
         let y = parseInt(mergingEl.style.top);
+
         mergingEl.style.left = location + 'px';
         mergingEl.style.top = y + 70 + 'px';
     };
@@ -430,6 +433,7 @@ const mergeSort = (function() {
         
             nums.forEach(function(num) {
                 const cell = document.createElement('div');
+
                 cell.setAttribute('class', 'merge-cell');
                 cell.textContent = num;
                 cell.setAttribute('id', num);
@@ -438,46 +442,47 @@ const mergeSort = (function() {
                 leftPosition += 30;
             });
         
-            document.querySelector('.screen').classList.add('screen-merge');
+            document.querySelector(dom.screen).classList.add('screen-merge');
         },
     };
 })();
 
 const selectionSort = (function() {
     function displaySelectionSelected(idx) {
-        const barElements = document.querySelectorAll('.bar');
+        const barElements = document.querySelectorAll(dom.bar);
         barElements[idx].classList.add('selected-minIdx');
     };
     
     function displayTraverser(idx) {
-        const barElements = document.querySelectorAll('.bar');
+        const barElements = document.querySelectorAll(dom.bar);
         barElements[idx].classList.add('selected-comparer');
     };
     
     function animationSwap(idx1, idx2) {
         const distance = idx2 - idx1;
-        const bars = document.querySelectorAll('.bar');
+        const bars = document.querySelectorAll(dom.bar);
         
         bars[idx1].style.transform = `translate(${50 * distance}px)`;
         bars[idx2].style.transform = `translate(${50 * -distance}px)`;
     };
     
     function fixAnimation(idx1, idx2) {
-        const screen = document.querySelector('.screen');
-        const bars = document.querySelectorAll('.bar');
+        const screen = document.querySelector(dom.screen);
+        const bars = document.querySelectorAll(dom.bar);
         const minVal = bars[idx2];
         const numSentBack = bars[idx1];
+
         minVal.style.transform = 'translate(0px)';
         numSentBack.style.transform = 'translate(0px)';
     
         screen.insertBefore(minVal, numSentBack);
-        const revPosition = document.querySelectorAll('.bar');
+        const revPosition = document.querySelectorAll(dom.bar);
         screen.insertBefore(numSentBack, revPosition[idx2 + 1]);
         minVal.classList.add('completed-bar');
     };
     
     function displayBarCompleted(idx) {
-        const bars = document.querySelectorAll('.bar');
+        const bars = document.querySelectorAll(dom.bar);
         bars[idx].classList.add('completed-bar');
     };
 
@@ -543,7 +548,7 @@ const selectionSort = (function() {
 })();
 
 function clearSelected(className) {
-    const barElements = document.querySelectorAll('.bar');
+    const barElements = document.querySelectorAll(dom.bar);
 
     for(let i = 0; i < barElements.length; i++) {
         barElements[i].classList.remove(className);
@@ -551,7 +556,7 @@ function clearSelected(className) {
 };
 
 function displayCompleteBar(idx) {
-    const barElements = document.querySelectorAll('.bar');
+    const barElements = document.querySelectorAll(dom.bar);
     
     if(idx === 1) {
         barElements[0].classList.add('completed-bar');
