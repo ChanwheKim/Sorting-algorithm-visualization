@@ -89,7 +89,7 @@ const sortController = (function() {
                 }
             });
         }
-    };
+    }
 
     function ctrlSortType(ev) {
         sortType = ev.target.textContent;
@@ -97,13 +97,13 @@ const sortController = (function() {
         document.querySelector(dom.sortLabel).classList.add('active');
         document.querySelector(dom.sortSelection).classList.toggle('active');
         document.querySelector(dom.sortLabel).textContent = sortType;
-    };
+    }
 
     function getNumbers() {
         return document.querySelector(dom.inputNums).value.split(',').map(function(cur) {
             return parseInt(cur);
         });
-    };
+    }
 
     function displayBars(nums) {
         const height = calculateHeight(nums);
@@ -119,7 +119,7 @@ const sortController = (function() {
             bar.style.height = height[idx] + 'px';
             document.querySelector(dom.screen).appendChild(bar);
         });
-    };
+    }
 
     function calculateHeight(nums) {
         const maxNum = Math.max.apply(null, nums);
@@ -134,7 +134,7 @@ const sortController = (function() {
                 return minHeight;
             }
         });
-    };
+    }
 
     function displayAlert(type) {
         const messageEl = document.querySelector(dom.warningMessage);
@@ -148,7 +148,7 @@ const sortController = (function() {
             messageEl.textContent = 'Please input more than 5 numbers.';
             messageEl.classList.add('warning-active');
         }
-    };
+    }
 })();
 
 const bubbleSort = (function() {
@@ -158,7 +158,7 @@ const bubbleSort = (function() {
         
         bars[idx1].style.transform = `translate(${50 * distance}px)`;
         bars[idx2].style.transform = `translate(${50 * -distance}px)`;
-    };
+    }
 
     function fixAnimation(idx1, idx2) {
         const screen = document.querySelector(dom.screen);
@@ -172,7 +172,7 @@ const bubbleSort = (function() {
         screen.insertBefore(minVal, numSentBack);
         const revPosition = document.querySelectorAll(dom.bar);
         screen.insertBefore(numSentBack, revPosition[idx2 + 1]);
-    };
+    }
 
     function displaySelected(idx1, idx2) {
         const barElements = document.querySelectorAll(dom.bar);
@@ -180,14 +180,14 @@ const bubbleSort = (function() {
         for(let i = idx1; i <= idx2; i++) {
             barElements[i].classList.add('selected');
         }
-    };
+    }
 
     function swap(arr, idx1, idx2) {
         let prev = arr[idx1];
         let next = arr[idx2];
         arr[idx1] = next;
         arr[idx2] = prev;
-    };
+    }
 
     return {
         run : function(nums) {
@@ -224,23 +224,23 @@ const insertionSort = (function() {
     function displayInsertionSelected(idx) {
         const barElements = document.querySelectorAll(dom.bar);
         barElements[idx].classList.add('selected-insertion');
-    };
+    }
 
     function landingBar() {
         document.querySelector(dom.selected).style.transform = 'translate(0px, 0px)';
         document.querySelector(dom.selected).classList.add('completed-bar');
-    };
+    }
 
     function displayCompareBar(idx) {
         const barElements = document.querySelectorAll(dom.bar);
         barElements[idx].classList.add('selected-comparer');
-    };
+    }
 
     function swapAnimation() {
         document.querySelector(dom.comparer).style.transition = 'all .6s';
         document.querySelector(dom.comparer).style.transform = 'translateX(50px)';
         document.querySelector(dom.insertionSelected).style.transform = 'translate(-50px, 120%)';
-    };
+    }
 
     function fixAni() {
         const selected = document.querySelector(dom.insertionSelected);
@@ -251,7 +251,7 @@ const insertionSort = (function() {
         selected.style.transform = 'translate(0px, 120%)';
         document.querySelector(dom.screen).insertBefore(selected, comparer);
         clearSelected('selected-comparer');
-    };
+    }
 
     function displayInsertion() {
         document.querySelector(dom.insertionSelected).style.transition = 'all .6s';
@@ -260,7 +260,7 @@ const insertionSort = (function() {
         document.querySelector(dom.comparer).classList.add('completed-bar');
         document.querySelector(dom.insertionSelected).classList.remove('selected-insertion');
         document.querySelector(dom.comparer).classList.remove('selected-comparer');
-    };
+    }
 
     return {
         run : function (nums) { 
@@ -334,7 +334,7 @@ const mergeSort = (function() {
             curCellEl.style.left = x + 'px';
             curCellEl.style.top = y - 70 + 'px';
         });
-    };
+    }
 
     function displaySplit(nums, direction) {
         if(direction === 'left') {
@@ -344,7 +344,7 @@ const mergeSort = (function() {
             const copiedNums = nums.slice();
             aniQueue.push(assignXyValue.bind(null, copiedNums, 'right'));
         }
-    };
+    }
 
     function merge(leftArr, rightArr) {
         const mergedArr = [];
@@ -353,7 +353,7 @@ const mergeSort = (function() {
         function calculatePosition(num1, num2, leftNodes) {
             const gap = calculateGap(num1, num2);
             leftPosition = document.getElementById(leftNodes[0]).offsetLeft + (gap / 2);
-        };
+        }
 
         aniQueue.push(calculatePosition.bind(null, leftArr[leftArr.length - 1], rightArr[0], leftArr.slice()));
     
@@ -403,7 +403,7 @@ const mergeSort = (function() {
         const beginOfRight = document.getElementById(firstNumOfRight).offsetLeft;
         
         return beginOfRight - endOfLeft;
-    };
+    }
 
     function displayMerging(val, location) {
         const mergingEl = document.getElementById(val);
@@ -411,7 +411,7 @@ const mergeSort = (function() {
 
         mergingEl.style.left = location + 'px';
         mergingEl.style.top = y + 70 + 'px';
-    };
+    }
 
     return {
         run : function (nums, direction) {
@@ -451,12 +451,12 @@ const selectionSort = (function() {
     function displaySelectionSelected(idx) {
         const barElements = document.querySelectorAll(dom.bar);
         barElements[idx].classList.add('selected-minIdx');
-    };
+    }
     
     function displayTraverser(idx) {
         const barElements = document.querySelectorAll(dom.bar);
         barElements[idx].classList.add('selected-comparer');
-    };
+    }
     
     function animationSwap(idx1, idx2) {
         const distance = idx2 - idx1;
@@ -464,7 +464,7 @@ const selectionSort = (function() {
         
         bars[idx1].style.transform = `translate(${50 * distance}px)`;
         bars[idx2].style.transform = `translate(${50 * -distance}px)`;
-    };
+    }
     
     function fixAnimation(idx1, idx2) {
         const screen = document.querySelector(dom.screen);
@@ -479,19 +479,19 @@ const selectionSort = (function() {
         const revPosition = document.querySelectorAll(dom.bar);
         screen.insertBefore(numSentBack, revPosition[idx2 + 1]);
         minVal.classList.add('completed-bar');
-    };
+    }
     
     function displayBarCompleted(idx) {
         const bars = document.querySelectorAll(dom.bar);
         bars[idx].classList.add('completed-bar');
-    };
+    }
 
     function swap(arr, idx1, idx2) {
         let prev = arr[idx1];
         let next = arr[idx2];
         arr[idx1] = next;
         arr[idx2] = prev;
-    };
+    }
 
     return {
         run : function (nums) {
@@ -553,7 +553,7 @@ function clearSelected(className) {
     for(let i = 0; i < barElements.length; i++) {
         barElements[i].classList.remove(className);
     }
-};
+}
 
 function displayCompleteBar(idx) {
     const barElements = document.querySelectorAll(dom.bar);
@@ -563,4 +563,4 @@ function displayCompleteBar(idx) {
     }
 
     barElements[idx].classList.add('completed-bar');
-};
+}
