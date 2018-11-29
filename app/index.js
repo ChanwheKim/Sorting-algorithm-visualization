@@ -127,12 +127,8 @@ const sortController = (function() {
         return nums.map(function(num) {
             const minHeight = 27;
             const newHeight = (num / maxNum) * 230;
-    
-            if(minHeight < newHeight) {
-                return newHeight;
-            } else {
-                return minHeight;
-            }
+
+            return minHeight < newHeight ? newHeight : minHeight;
         });
     }
 
