@@ -34,22 +34,22 @@ const sortController = (function() {
     });
 
     function ctrlSorts(ev) {
-        const numbers = getNumbers();
-        const notNumbers = numbers.some(function(num) {
-            return isNaN(num);
-        });
-        const minLength = numbers.length >= 5;
-
-        if(notNumbers) {
-            displayAlert('NaN');
-        }
-
-        if(!minLength) {
-            displayAlert('minimum-length');
-        }
-
-        if(!isSortingInProgress && !notNumbers && minLength) {
+        if(!isSortingInProgress) {
+            const numbers = getNumbers();
+            const notNumbers = numbers.some(function(num) {
+                return isNaN(num);
+            });
+            const minLength = numbers.length >= 5;
             let term = 550;
+
+            if(notNumbers) {
+                displayAlert('NaN');
+                return ;
+            } else if(!minLength) {
+                displayAlert('minimum-length');
+                return ;
+            }
+
             isSortingInProgress = true;
 
             document.querySelector(selectors.warningMessage).classList.remove('warning-active');
@@ -84,7 +84,6 @@ const sortController = (function() {
                 if(isLastAni) {
                     setTimeout(function() {
                         isSortingInProgress = false;
-                        term = 550;
                     }, term);
                 }
             });
@@ -114,8 +113,8 @@ const sortController = (function() {
     
             span.innerText = num;
             bar.appendChild(span);
-            bar.setAttribute('class', 'bar');
-            bar.setAttribute('id', num);
+            bar.className = 'bar';
+            bar.id = num;
             bar.style.height = height[idx] + 'px';
             document.querySelector(selectors.screen).appendChild(bar);
         });
@@ -430,9 +429,9 @@ const mergeSort = (function() {
             nums.forEach(function(num) {
                 const cell = document.createElement('div');
 
-                cell.setAttribute('class', 'merge-cell');
+                cell.className = 'merge-cell';
+                cell.id = num;
                 cell.textContent = num;
-                cell.setAttribute('id', num);
                 cell.style.left = leftPosition + 'px';
                 document.querySelector(selectors.screen).appendChild(cell);
                 leftPosition += 30;
