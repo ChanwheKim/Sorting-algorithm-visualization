@@ -64,13 +64,16 @@ const sortController = (function() {
                     insertionSort.run(numbers);
                     break;
                 case 'Merge' :
-                    mergeSort.displayCells(numbers);
+                    displayCells(numbers);
                     mergeSort.run(numbers);
                     break;
                 case 'Selection' :
                     displayBars(numbers);
                     selectionSort.run(numbers);
                     break;
+                case 'Quick' :
+                    displayCells(numbers);
+                    quickSort.run(numbers);
             }
 
             aniQueue.forEach(function(aniFunc, idx) {
@@ -559,3 +562,64 @@ function displayCompleteBar(idx) {
 
     barElements[idx].classList.add('completed-bar');
 }
+
+ function displayCells(nums) {
+    let leftPosition = 400 - (nums.length * 30 / 2);
+
+    nums.forEach(function(num) {
+        const cell = document.createElement('div');
+
+        cell.className = 'cell';
+        cell.id = num;
+        cell.textContent = num;
+        cell.style.left = leftPosition + 'px';
+        document.querySelector(selectors.screen).appendChild(cell);
+        leftPosition += 30;
+    });
+
+    document.querySelector(selectors.screen).classList.add('screen-merge');
+}
+
+const quickSort = (function() {
+    function partition(arr, start, end) {
+        let pivotIdx = end;
+        let pivotLoc = start;
+
+        while(pivotLoc !== pivotIdx) {
+            if(arr[pivotLoc] <= arr[pivotIdx]) {
+                pivotLoc++;
+            } else {
+                swap(arr, pivotLoc, pivotIdx);
+                swap(arr, pivotLoc, --pivotIdx);
+            }
+        }
+
+        return pivotLoc;
+    }
+
+    function swap(arr, idx1, idx2) {
+        let temp = arr[idx1];
+        arr[idx1] = arr[idx2];
+        arr[idx2] = temp;
+    }
+
+    return {
+        run : function(arr, startIdx, endIdx) {
+            if(startIdx === undefined && endIdx === undefined) {
+                startIdx = 0;
+                endIdx = arr.length - 1;
+            }
+
+            if(startIdx < endIdx) {
+                const pivotLoc = partition(arr, startIdx, endIdx);
+    
+                quickSort.run(arr, startIdx, pivotLoc - 1);
+                quickSort.run(arr, pivotLoc + 1, endIdx);
+            }
+
+            if(endIdx - startIdx === arr.length - 1) {
+                return arr;
+            }
+        },
+    }
+})();
