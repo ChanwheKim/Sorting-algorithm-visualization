@@ -21,6 +21,10 @@ const selectors = {
     warningMessage : '.warning-message',
     bar: '.bar',
 };
+const VALIDATION = {
+    TYPE_FAILURE: 0,
+    LENGTH_FAILURE: 1
+};
 
 const sortController = (function() {
     let sortType;
@@ -43,10 +47,10 @@ const sortController = (function() {
             let term = 550;
 
             if(notNumbers) {
-                displayAlert('NaN');
+                displayAlert(VALIDATION.TYPE_FAILURE);
                 return ;
             } else if(!minLength) {
-                displayAlert('minimum-length');
+                displayAlert(VALIDATION.LENGTH_FAILURE);
                 return ;
             }
 
@@ -74,6 +78,7 @@ const sortController = (function() {
                 case 'Quick' :
                     displayCells(numbers);
                     quickSort.run(numbers);
+                    break;
             }
 
             aniQueue.forEach(function(aniFunc, idx) {
@@ -137,12 +142,12 @@ const sortController = (function() {
     function displayAlert(type) {
         const messageEl = document.querySelector(selectors.warningMessage);
 
-        if(type === 'NaN') {
+        if(type === VALIDATION.TYPE_FAILURE) {
             messageEl.textContent = 'Please input only numbers.';
             messageEl.classList.add('warning-active');
         }
 
-        if(type === 'minimum-length') {
+        if(type === VALIDATION.LENGTH_FAILURE) {
             messageEl.textContent = 'Please input more than 5 numbers.';
             messageEl.classList.add('warning-active');
         }
@@ -582,9 +587,9 @@ function displayCompleteBar(idx) {
 
 const quickSort = (function() {
     function partition(arr, start, end) {
-        let pivotIdx = end;
         let pivotLoc = start;
-
+        let pivotIdx = end;
+        
         while(pivotLoc !== pivotIdx) {
             if(arr[pivotLoc] <= arr[pivotIdx]) {
                 pivotLoc++;
